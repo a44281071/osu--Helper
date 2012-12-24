@@ -1,0 +1,256 @@
+﻿<Window x:Class="osu_Helper.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras.WPF4"       
+        DataContext="{Binding Main,Source={StaticResource Locator}}"
+        xmlns:Converters="clr-namespace:osu_Helper.ViewModel.Converters"
+        Title="{Binding  Information.Main_Info}"  Height="600" Width="720" >
+
+    <Window.Resources>
+        <Converters:SpeedConverter x:Key="SpeedConverter" />
+        <DataTemplate  x:Key="lstBox_Maps" DataType="ListBoxItem">
+            <DataTemplate.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="BorderBrush" Value="LightBlue" />
+                    <Setter Property="BorderThickness" Value="1" />
+                    <Setter Property="Margin" Value="2"/>
+                </Style>
+            </DataTemplate.Resources>
+            <Expander Width="500">
+                <Expander.Header>
+                    <DockPanel>
+                        <CheckBox  IsChecked="{Binding IsCheckBoxSelected}" />                      
+                        <TextBlock Grid.Column="1" Text="{Binding Path=Beat_Map.FullName}" />
+                    </DockPanel>
+                </Expander.Header>
+                <Expander.Content>
+                    <Grid ShowGridLines="True">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <!--预览图&透明播放按钮-->
+                        <Grid Width="80" Height="60">
+                            <Grid.Resources>
+                                <ControlTemplate x:Key="btn_Play">
+                                    <Grid>
+                                        <Viewbox HorizontalAlignment="Center" VerticalAlignment="Center">
+                                            <Path x:Name="icoPlay" Data="M0,0 L0,70 L90,35 Z" Height="100" Width="100" Margin="10" Opacity="0">
+                                                <Path.Fill>
+                                                    <LinearGradientBrush EndPoint="0.9,1" StartPoint="0,0">
+                                                        <GradientStop Color="White" Offset="0"/>
+                                                        <GradientStop Color="#20FFFFFF" Offset="1"/>
+                                                    </LinearGradientBrush>
+                                                </Path.Fill>
+                                            </Path>
+                                        </Viewbox>
+                                        <Viewbox>
+                                            <!--设置按钮的内容可见，也可以是一个图片-->
+                                            <ContentPresenter Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center"  Content="{TemplateBinding Property=ToggleButton.Content}" />
+                                        </Viewbox>
+                                    </Grid>
+                                    <!--下边是触发器-->
+                                    <ControlTemplate.Triggers>
+                                        <EventTrigger RoutedEvent="MouseEnter">
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <DoubleAnimation
+                                     Storyboard.TargetName="icoPlay" 
+                                     Storyboard.TargetProperty="Opacity"
+                                      To="1.0" Duration="0:0:1" 
+                                     AutoReverse="True" RepeatBehavior="Forever" />
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                        <EventTrigger RoutedEvent="MouseLeave">
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <DoubleAnimation
+                                     Storyboard.TargetName="icoPlay" 
+                                     Storyboard.TargetProperty="Opacity"
+                                      To="0" Duration="0:0:3">
+                                                    </DoubleAnimation>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Grid.Resources>
+                            <Grid.Background>
+                                <!--预览图-->
+                                <ImageBrush ImageSource="{Binding Path=Beat_Map.ShowPicUrl}"/>
+                            </Grid.Background>
+                            <!--透明播放按钮-->
+                            <RadioButton Cursor="Hand" Height="70" Width="70" Background="Transparent" HorizontalAlignment="Right" Template="{StaticResource btn_Play}" Command="{Binding Main.ComPlaySongTaste,Source={StaticResource Locator},Mode=OneWay}" CommandParameter="{Binding}"/>
+                        </Grid>
+                        <!--歌曲内容显示区 提示-->
+                        <WrapPanel Grid.Column="1">
+                            <WrapPanel.Resources>                            
+                                <Style TargetType="DockPanel">
+                                    <Setter Property="Margin" Value="2,0" />
+                                </Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="FontFamily" Value="Microsoft YaHei" />
+                                    <Setter Property="FontSize" Value="15" />
+                                </Style>
+                                <Style TargetType="TextBlock" x:Key="txt_Head">
+                                    <Setter Property="Margin" Value="0,0,5,0" />
+                                    <Setter Property="Foreground" Value="Sienna" />
+                                </Style>
+                            </WrapPanel.Resources>
+                            <Border>
+                                <DockPanel >
+                                    <TextBlock Text="Id:" Style="{StaticResource txt_Head}" />
+                                    <TextBlock  Text="{Binding Path=Beat_Map.Id}" />
+                                </DockPanel>
+                            </Border>
+                            <Border>
+                                <DockPanel>
+                                    <TextBlock Text="Title:" Style="{StaticResource txt_Head}" />
+                                    <TextBlock  Text="{Binding Path=Beat_Map.Title}"/>
+                                </DockPanel>
+                            </Border>
+                            <Border>
+                                <DockPanel>
+                                    <TextBlock Text="Artist:" Style="{StaticResource txt_Head}"/>
+                                    <TextBlock  Text="{Binding Path=Beat_Map.Artist}"/>
+                                </DockPanel>
+                            </Border>
+                            <Border>
+                                <DockPanel>
+                                    <TextBlock Text="Mapper:" Style="{StaticResource txt_Head}" />
+                                    <TextBlock  Text="{Binding Path=Beat_Map.Mapper}"/>
+                                </DockPanel>
+                            </Border>
+                            <Border>
+                                <DockPanel>
+                                    <TextBlock Text="Styles:" Style="{StaticResource txt_Head}"/>
+                                    <TextBlock  Text="{Binding Path=Beat_Map.Styles}"/>
+                                </DockPanel>
+                            </Border>
+                            <Border>
+                                <DockPanel>
+                                    <TextBlock Text="Language:" Style="{StaticResource txt_Head}"/>
+                                    <TextBlock  Text="{Binding Path=Beat_Map.Language}"/>
+                                </DockPanel>
+                            </Border>
+                            <Border>
+                                <DockPanel>
+                                    <TextBlock Text="Sb:" Style="{StaticResource txt_Head}"/>
+                                    <TextBlock  Text="{Binding Path=Beat_Map.Sb}"/>
+                                </DockPanel>
+                            </Border>
+                            <Border>
+                                <Button Content="添加下载"  Command="{Binding Main.ComDownLoaderAddBeatMap,Source={StaticResource Locator},Mode=OneWay}" CommandParameter="{Binding}"/>
+                            </Border>
+                        </WrapPanel>
+                    </Grid>
+                </Expander.Content>
+            </Expander>
+        </DataTemplate>
+
+    </Window.Resources>
+
+    <!--==============================主内容显示区=======================================-->
+    <Grid>
+        <DockPanel Name="dockPanel_Main" >
+            <Border Height="25" Background="SkyBlue" BorderBrush="Black" BorderThickness="1" DockPanel.Dock="Top">
+                <TextBlock Foreground="Black">Dock = "Top"</TextBlock>
+            </Border>
+            <Border Height="25" Background="SkyBlue" BorderBrush="Black" BorderThickness="1" DockPanel.Dock="Top">
+                <TextBlock Foreground="Black">Dock = "Top"</TextBlock>
+            </Border>
+            <Border Height="25" Background="LemonChiffon" BorderBrush="Black" BorderThickness="1" DockPanel.Dock="Bottom">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="100"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Foreground="Black"><Run Text="Dock = &quot;Bottom&quot;"/></TextBlock>
+                    <ProgressBar x:Name="ProgressBar_Show" Height="15" Grid.Column="1" Value="{Binding PrograssBar_Value}"  />
+                </Grid>
+            </Border>
+            <Border Background="White" BorderBrush="Black" BorderThickness="1" Panel.ZIndex="0">
+                <TabControl  Name="tabControl1" >
+                    <!-- WebNewRank 页面选项卡 -->
+                    <TabItem Header="WebNewRank" Name="tabItem1_WebNewRank">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="80" />
+                            </Grid.ColumnDefinitions>
+                            <!--获取列表显示-->
+                            <ListBox Name="ListBox_Show" ItemTemplate="{StaticResource lstBox_Maps}" ItemsSource="{Binding BeatMapsNewRankList}">
+                            </ListBox>
+                            <StackPanel Grid.Column="1" Name="stackPanel_NewRankCtrl" >
+                                <Button Content="获取列表" Height="23"  Width="75" Command="{Binding ComGetNewRankedBeatMapListByWeb}"/>
+                                <Button Content="保存列表" Height="23"  Width="75" IsEnabled="False" />
+                                <Button Content="显示结果" Height="23"  Width="75" IsEnabled="True" Click="button_ShowList_Click" />
+                            </StackPanel>
+                        </Grid>
+                        <!-- 下载器页面选项卡 -->
+                    </TabItem>
+                    <TabItem Header="下载器" HorizontalAlignment="Left" Height="24" VerticalAlignment="Top" Width="71">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="25"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="25"/>
+                            </Grid.RowDefinitions>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBox Width="320" Text="{Binding DownloadUrl}"/>
+                                <Button Content="添加到下载列表" Margin="5,0,0,0" Command="{Binding ComDownLoaderAddFile}"/>
+                                <Button Content="全部开始" Margin="5,0,0,0" Command="{Binding ComDownLoaderStart}"/>
+                                <Button Content="全部暂停" Margin="5,0,0,0" Command="{Binding ComDownLoaderPause}"/>
+                            </StackPanel>
+                            <ListView Grid.Row="1" ItemsSource="{Binding DownloadFileList}">
+                                <ListView.Resources>
+                                    <DataTemplate x:Key="FileItemTemplate">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="300"/>
+                                                <ColumnDefinition Width="100"/>
+                                                <ColumnDefinition Width="100"/>
+                                                <ColumnDefinition Width="100"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="{Binding DownloadUrl}"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.Resources>
+                                <ListView.View>
+                                    <GridView>
+                                        <GridViewColumn Header="文件名" DisplayMemberBinding="{Binding DownloadUrl}" Width="300" />
+                                        <GridViewColumn Header="进度" Width="100">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <ProgressBar Value="{Binding DownloadBytes}" Maximum="{Binding TotalBytes}" Width="80" Height="10"/>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="速度" DisplayMemberBinding="{Binding Speed, Converter={StaticResource SpeedConverter}}" Width="100"/>
+                                        <GridViewColumn Header="操作" Width="200">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Button Content="暂停"/>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                    </GridView>
+                                </ListView.View>
+                            </ListView>
+                            <StackPanel Grid.Row="2" Orientation="Horizontal">
+                                <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center"><Run Text="下载速度:"/></TextBlock>
+                                <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center" Text="{Binding Speed, Converter={StaticResource SpeedConverter}}"/>
+                            </StackPanel>
+                        </Grid>
+                    </TabItem>
+                </TabControl>
+            </Border>
+        </DockPanel>
+    </Grid>
+</Window>

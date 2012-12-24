@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="osu_Helper.Temp.ImageButton1"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="100" d:DesignWidth="100">
+
+    <Grid>
+        <Grid.Resources>
+            <ControlTemplate x:Key="ToggleButton" TargetType="{x:Type ToggleButton}">
+                <Grid>
+                    <!-- Over_Red -->
+                    <Ellipse x:Name="image1" Width="40" Height="40" Fill="Transparent"/>
+                    <!-- Pressed Green-->                    
+                    <Ellipse x:Name="image2"  Width="20" Height="25" Fill="Transparent"/>
+                </Grid>
+                <!--下边是触发器-->
+                <ControlTemplate.Triggers>
+                    <Trigger Property="ToggleButton.IsMouseOver" Value="True">
+                        <Setter TargetName="image1" Property="Fill" Value="#FFE43D3D"></Setter>
+                    </Trigger>
+                    <Trigger Property="ToggleButton.IsChecked" Value="True">
+                        <Setter TargetName="image2" Property="Fill" Value="#FF32EE1F" />
+                        <Setter TargetName="image1" Property="Fill" Value="Transparent" />
+                    </Trigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+        </Grid.Resources>
+
+        <ToggleButton Content="OK" Template="{StaticResource ToggleButton}"  Margin="5"></ToggleButton>
+    </Grid>
+</UserControl>

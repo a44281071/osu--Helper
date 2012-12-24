@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<MapRankList_XPath>
+  <WebRankListUrl>http://osu.ppy.sh/p/beatmaplist</WebRankListUrl>
+  <CategoryListXPath>//html[1]/body[1]/div[1] /div[1]/div[1]/div[4]/div[3]/div[4]/div</CategoryListXPath>
+  <IdXPath>.</IdXPath>
+  <TitleXPath>./div[3]/a[1]</TitleXPath>
+  <ArtistXPath>./div[3]/span[1]</ArtistXPath>
+  <MapperXPath>./div[4]/div[1]/a[1]</MapperXPath>
+  <StylesXPath>./div[5]/div[1]/a[1]</StylesXPath>
+  <LanguageXPath>./div[5]/div[1]/a[2]</LanguageXPath>
+  <SbXPath>./div[3]/i[1]</SbXPath>
+  <PictureUrl>http://s.ppy.sh/mt/</PictureUrl>
+  <SongTasteUrl>http://s.ppy.sh/mp3/preview/</SongTasteUrl>
+<DownUrl_osz_so></DownUrl_osz_so>
+</MapRankList_XPath>
